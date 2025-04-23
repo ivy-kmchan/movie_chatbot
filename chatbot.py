@@ -1,0 +1,70 @@
+import streamlit as st
+import os
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain.schema import HumanMessage, SystemMessage
+from movie_api import OMDbAPI
+from vector_store import MovieVectorStore
+from graphql_schema import schema
+
+load_dotenv()
+
+# Initialize components
+movie_api = OMDbAPI()
+vector_store = MovieVectorStore()
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7)
+
+def initialize_session_state():
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+
+def process_movie_query(user_input: str):
+    # Create a system message for the chatbot
+    system_msg = SystemMessage(content="""
+    You are a helpful movie expert chatbot. Use the provided movie information to answer questions.
+    Format your responses in a conversational way. If you don't have enough information,
+    kindly ask for clarification.
+    If you do not know the answer, simply say you do not know.
+    """)
+    
+    # Search for relevant movies in the vector store
+    movies = vector_store.search_movies(user_input)
+    
+    # Create context from movie data
+    context = "Based on the following movies: "
+    for movie in movies:
+        context += f"{movie['Title']} ({movie['Year']}): {movie['Plot']}. "
+    
+    # Combine user input with context
+    human_msg = HumanMessage(content=f"Context: {context}\nQuestion: {user_input}")
+    
+    # Get response from LLM
+    response = llm([system_msg, human_msg])
+    return response.content
+
+def main():
+    st.title("🎬 Movie Chatbot")
+    st.write("Ask me anything about movies!")
+    
+    initialize_session_state()
+    
+    # Display chat messages
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
+    
+    # Chat input
+    if user_input := st.chat_input("Ask about movies..."):
+        # Display user message
+        with st.chat_message("user"):
+            st.write(user_input)
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        
+        # Get and display assistant response
+        with st.chat_message("assistant"):
+            response = process_movie_query(user_input)
+            st.write(response)
+        st.session_state.messages.append({"role": "assistant", "content": response})
+
+if __name__ == "__main__":
+    main()
