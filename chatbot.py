@@ -12,7 +12,7 @@ load_dotenv()
 # Initialize components
 movie_api = OMDbAPI()
 vector_store = MovieVectorStore()
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7)
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7, api_key=os.getenv("OPENAI_API_KEY"))
 
 def initialize_session_state():
     if 'messages' not in st.session_state:
