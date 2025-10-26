@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class OMDbAPI:
-    def __init__(self):
-        self.api_key = os.getenv('OMDB_API_KEY')
+    def __init__(self, api_key: Optional[str] = None):
+        self.api_key = api_key or os.getenv('OMDB_API_KEY')
         self.base_url = 'http://www.omdbapi.com/'
 
     def search_movie(self, title: str) -> Optional[Dict]:

@@ -41,3 +41,14 @@ streamlit run chatbot.py
 - `vector_store.py`: Manages the ChromaDB vector database
 - `graphql_schema.py`: Defines the GraphQL schema and resolvers
 - `chatbot.py`: Implements the Streamlit chat interface
+
+## Deployment
+
+### Streamlit Cloud
+
+1. Push your code to GitHub
+2. Connect your repository to Streamlit Cloud
+3. Configure secrets in the Streamlit Cloud dashboard (see `DEPLOYMENT_GUIDE.md`)
+4. Deploy!
+
+For detailed deployment instructions, see [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md).

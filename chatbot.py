@@ -9,13 +9,19 @@ from graphql_schema import schema
 
 load_dotenv()
 
+# Get API keys from Streamlit secrets (cloud) or environment variables (local)
+try:
+    openai_api_key = st.secrets["openai"]["api_key"]
+    omdb_api_key = st.secrets["omdb"]["api_key"]
+except (KeyError, FileNotFoundError):
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    omdb_api_key = os.getenv("OMDB_API_KEY")
+
 # Initialize components
-movie_api = OMDbAPI()
+movie_api = OMDbAPI(api_key=omdb_api_key)
 vector_store = MovieVectorStore()
 
-# Get key from secrets
-openai_key = st.secrets["openai"]["api_key"]
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7, api_key=os.getenv("OPENAI_API_KEY"))
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7, api_key=openai_api_key)
 
 
 
