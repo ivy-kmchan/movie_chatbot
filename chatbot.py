@@ -21,7 +21,7 @@ except (KeyError, FileNotFoundError):
 movie_api = OMDbAPI(api_key=omdb_api_key)
 vector_store = MovieVectorStore()
 
-llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0.7, api_key=openai_api_key)
+llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7, api_key=openai_api_key)
 
 
 
