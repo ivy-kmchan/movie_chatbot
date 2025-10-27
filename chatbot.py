@@ -25,14 +25,17 @@ if not openai_api_key:
 if not omdb_api_key:
     st.warning("⚠️ OMDb API key is missing. Some features may not work.")
 
+# Set OpenAI API key in environment for langchain
+os.environ["OPENAI_API_KEY"] = openai_api_key
+
 # Initialize components
 movie_api = OMDbAPI(api_key=omdb_api_key)
 vector_store = MovieVectorStore()
 
+# Initialize ChatOpenAI without explicit api_key parameter (it will use environment variable)
 llm = ChatOpenAI(
     model="gpt-3.5-turbo",
-    temperature=0.7,
-    openai_api_key=openai_api_key
+    temperature=0.7
 )
 
 
