@@ -72,8 +72,8 @@ def process_movie_query(user_input: str):
     # Combine user input with context
     human_msg = HumanMessage(content=f"Context: {context}\nQuestion: {user_input}")
     
-    # Get response from LLM
-    response = llm([system_msg, human_msg])
+    # Get response from LLM using invoke method
+    response = llm.invoke([system_msg, human_msg])
     return response.content
 
 def main():
