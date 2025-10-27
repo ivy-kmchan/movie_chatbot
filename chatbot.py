@@ -32,11 +32,16 @@ os.environ["OPENAI_API_KEY"] = openai_api_key
 movie_api = OMDbAPI(api_key=omdb_api_key)
 vector_store = MovieVectorStore()
 
-# Initialize ChatOpenAI without explicit api_key parameter (it will use environment variable)
-llm = ChatOpenAI(
-    model="gpt-3.5-turbo",
-    temperature=0.7
-)
+# Initialize ChatOpenAI with try-except to show better error messages
+try:
+    llm = ChatOpenAI(
+        model="gpt-3.5-turbo",
+        temperature=0.7
+    )
+except Exception as e:
+    st.error(f"❌ Error initializing ChatOpenAI: {str(e)}")
+    st.error(f"API Key starts with: {openai_api_key[:10]}..." if openai_api_key else "API Key is None")
+    st.stop()
 
 
 
